@@ -9,7 +9,6 @@
     {% if is_authenticated %}
 
         <h2>Insights</h2>
-        <br><br>
         <div id="bubble-plot"></div>
         <p>Click on a month (bar within graph) to update contents shown in the bubble chart.</p>
         <h3>Daily Summary</h3>
@@ -42,7 +41,7 @@
                     const theme = body.getAttribute("data-bs-theme");
 
                     return {
-                        background: theme === "dark" ? "#121212" : "#ffffff",
+                        background: theme === "dark" ? "#212529" : "#ffffff",
                         textColor: theme === "dark" ? "#ffffff" : "#000000"
                     };
                 }
@@ -177,7 +176,9 @@
                                     "field": "month",
                                     "type": "nominal",
                                     "legend": {
-                                        "disable": true
+                                        "title": "Month (clickable bars)",
+                                        "labelColor": themeStyles.textColor,
+                                        "titleColor": themeStyles.textColor
                                     }
                                 },
                                 "tooltip": [
