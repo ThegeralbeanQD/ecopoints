@@ -12,6 +12,11 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 
 import os.path
 from pathlib import Path
+from dotenv import load_dotenv
+from urllib.parse import urlparse, parse_qs
+
+load_dotenv()
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -90,11 +95,24 @@ WSGI_APPLICATION = 'itech_project.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
+tmpPostgres = urlparse(os.getenv("DATABASE_URL"))
+query_params = parse_qs(tmpPostgres.query)
+
+options = query_params.get("options", [None])[0]
+sslmode = query_params.get("sslmode", ["require"])[0]
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': tmpPostgres.path.replace('/', ''),
+        'USER': tmpPostgres.username,
+        'PASSWORD': tmpPostgres.password,
+        'HOST': tmpPostgres.hostname,
+        'PORT': 5432,
+        'OPTIONS': {
+            'sslmode': sslmode,
+            'options': options # handles endpoint
+        },
     }
 }
 
